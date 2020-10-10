@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { useState } from 'react';
+import { logIt, LogType } from '@nielsendigital/ms-common';
 
 const UseRequest = ({ url, method, body, onSuccess }) => {
   //method === get || post || patch ...
@@ -9,13 +10,16 @@ const UseRequest = ({ url, method, body, onSuccess }) => {
     try {
       setErrors([]);
       const response = await axios[method](url, body);
-      console.log('response: ', response);
+      logIt.out(LogType.RECEIVED, response);
+
+      // if onSuccess callback present then pass in response.data and call
       if (onSuccess) {
         onSuccess(response.data);
       }
+
       return response.data;
     } catch (err) {
-      console.log('err: ', err);
+      logIt.out(LogType.ERROR, err);
       setErrors(err.response.data.errors);
     }
   };
