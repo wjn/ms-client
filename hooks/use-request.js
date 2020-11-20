@@ -8,6 +8,7 @@ const UseRequest = ({ url, method, body, onSuccess }) => {
 
   const doRequest = async () => {
     try {
+      // reset errors from previous request
       setErrors([]);
       const response = await axios[method](url, body);
       logIt.out(LogType.RECEIVED, response);
