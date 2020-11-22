@@ -1,17 +1,22 @@
 import PageContainer from '../components/page-container';
+import Link from 'next/link';
 
 const LandingPage = ({ appName, currentUser, tickets }) => {
   const ticketList = tickets.map((ticket) => {
     return (
       <tr key={ticket.id}>
-        <td>{ticket.title}</td>
-        <td>{ticket.price}</td>
+        <td>
+          <Link href="/tickets/[ticketId]" as={`/tickets/${ticket.id}`}>
+            <a className="ticket-link">{ticket.title}</a>
+          </Link>
+        </td>
+        <td>{ticket.price.toLocaleString('us-US', { style: 'currency', currency: 'USD' })}</td>
       </tr>
     );
   });
 
   return (
-    <PageContainer pageName={`Your tickets`}>
+    <PageContainer pageName={`Available Tickets`}>
       <table className="table">
         <thead>
           <tr>
