@@ -2,6 +2,7 @@ import { useState } from 'react';
 import PageContainer from '../../components/page-container';
 import Router from 'next/router';
 import useRequest from '../../hooks/use-request';
+import { ErrorsNoFieldAssiged, ErrorsInputField } from '../../components/error-notices';
 
 const NewTicket = ({ appName, currentUser }) => {
   const [title, setTitle] = useState('');
@@ -46,15 +47,7 @@ const NewTicket = ({ appName, currentUser }) => {
             className={'form-control' + (errors?.some((err) => err.field === 'title') ? ' is-invalid' : '')}
           />
           {/* Display title field errors */}
-          {errors?.some((err) => err.field === 'title') && (
-            <div className="invalid-feedback">
-              {errors.map((err) => {
-                if (err.field === 'title') {
-                  return <div key={err.message}>{err.message}</div>;
-                }
-              })}
-            </div>
-          )}{' '}
+          <ErrorsInputField errors={errors} fieldName="title" />
         </div>
         {/* Price */}
         <div className="form-group">
@@ -66,29 +59,12 @@ const NewTicket = ({ appName, currentUser }) => {
             className={'form-control' + (errors?.some((err) => err.field === 'price') ? ' is-invalid' : '')}
           />
           {/* Display price field errors */}
-          {errors?.some((err) => err.field === 'price') && (
-            <div className="invalid-feedback">
-              {errors.map((err) => {
-                if (err.field === 'price') {
-                  return <div key={err.message}>{err.message}</div>;
-                }
-              })}
-            </div>
-          )}{' '}
+          <ErrorsInputField errors={errors} fieldName="price" />
         </div>
         {/* Handle cases where there is an error but no field is assigned. 
             e.g., 'email already in use.
         */}
-        {errors?.some((err) => !err.field) && (
-          <div className="alert alert-danger">
-            <h4>Ooops....</h4>
-            {errors.map((err) => {
-              if (!err.field) {
-                return <div key={err.message}>{err.message}</div>;
-              }
-            })}
-          </div>
-        )}{' '}
+        <ErrorsNoFieldAssiged errors={errors} />
         <button className="btn btn-primary form-control">Submit</button>
       </form>
     </PageContainer>
