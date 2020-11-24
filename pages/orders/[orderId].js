@@ -1,9 +1,20 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import PageContainer from '../../components/page-container';
+import StripeCheckout from 'react-stripe-checkout';
+import useRequest from '../../hooks/use-request';
+import { ErrorsNoFieldAssiged } from '../../components/error-notices';
 
-const OrderShow = ({ order }) => {
+const OrderShow = ({ order, currentUser }) => {
   const [timeLeft, setTimeLeft] = useState(0);
+  const { doRequest, errors } = useRequest({
+    url: '/api/payments',
+    method: 'post',
+    body: {
+      orderId: order.id,
+    },
+    onSuccess: (payment) => console.log(payment),
+  });
 
   useEffect(() => {
     const findTimeLeft = () => {
@@ -44,7 +55,7 @@ const OrderShow = ({ order }) => {
     if (ms <= 0) {
       return (
         <>
-          This order has expired.{' '}
+          This order has expired.&nbsp;
           <Link href="/">
             <a className="link">Return to Ticket List.</a>
           </Link>
@@ -60,10 +71,29 @@ const OrderShow = ({ order }) => {
     out += `${seconds} ${secondsGrammar}`;
 
     // return minutes and seconds information if duration is > 1m
-    return <>{out}</>;
+    return (
+      <>
+        {out}
+        <br />
+        <StripeCheckout
+          token={({ id }) => doRequest({ token: id })}
+          stripeKey="pk_test_51Hn2IsG1LZGfSbsjzqcs3mLxWiU6D0pR61IPAs0JlR2vz6fRPnmtrMbTnBPM3taTUthCESVGKgHoJidZklXoz2vn00MPY6rTnY"
+          amount={order.ticket.price * 100}
+          email={currentUser.email}
+        />
+      </>
+    );
   };
 
-  return <PageContainer pageName="Order Information">{countDownMessage(timeLeft)}</PageContainer>;
+  // TODO: extract stripe public key to K8s secret -- check Next.js docs for how it handles ENV vars.
+  return (
+    <PageContainer pageName="Order Information">
+      <div className="row">
+        <div className="col-xs">{countDownMessage(timeLeft)}</div>
+        <ErrorsNoFieldAssiged errors={errors} />
+      </div>
+    </PageContainer>
+  );
 };
 
 OrderShow.getInitialProps = async (context, client) => {

@@ -15,12 +15,18 @@ const TicketShow = ({ ticket }) => {
 
   return (
     <PageContainer pageName="Ticket Information">
-      <h3>{ticket.title.toUpperCase()}</h3>
-      <h4>Price: {ticket.price.toLocaleString('us-US', { style: 'currency', currency: 'USD' })}</h4>
-      <ErrorsNoFieldAssiged errors={errors} />
-      <button onClick={doRequest} className="btn btn-primary">
-        Purchase
-      </button>
+      <div className="row">
+        <h3>{ticket.title.toUpperCase()}</h3>
+      </div>
+      <div className="row">
+        <h4>Price: {ticket.price.toLocaleString('us-US', { style: 'currency', currency: 'USD' })}</h4>
+      </div>
+      <div className="row">
+        <ErrorsNoFieldAssiged errors={errors} />
+        <button onClick={() => doRequest()} className="btn btn-primary">
+          Purchase
+        </button>
+      </div>
     </PageContainer>
   );
 };

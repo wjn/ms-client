@@ -17,15 +17,23 @@ const LandingPage = ({ appName, currentUser, tickets }) => {
 
   return (
     <PageContainer pageName={`Available Tickets`}>
-      <table className="table">
-        <thead>
-          <tr>
-            <th>Title</th>
-            <th>Price</th>
-          </tr>
-        </thead>
-        <tbody>{ticketList}</tbody>
-      </table>
+      <div className="row">
+        <Link href="/tickets/new">
+          <a className="new-ticket">Add a New Ticket</a>
+        </Link>
+      </div>
+
+      <div className="row">
+        <table className="table">
+          <thead>
+            <tr>
+              <th>Title</th>
+              <th>Price</th>
+            </tr>
+          </thead>
+          <tbody>{ticketList}</tbody>
+        </table>
+      </div>
     </PageContainer>
   );
 };

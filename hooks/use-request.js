@@ -6,11 +6,11 @@ const UseRequest = ({ url, method, body, onSuccess }) => {
   //method === get || post || patch ...
   const [errors, setErrors] = useState([]);
 
-  const doRequest = async () => {
+  const doRequest = async (props = {}) => {
     try {
       // reset errors from previous request
       setErrors([]);
-      const response = await axios[method](url, body);
+      const response = await axios[method](url, { ...body, ...props });
       logIt.out(LogType.RECEIVED, response);
 
       // if onSuccess callback present then pass in response.data and call
